@@ -142,11 +142,11 @@ async function VerifyOtpAndCreate(req, res) {
 
     const result = await createUser.save();
     // console.log("first:",VerifyOtpNow)
-
+ const userById = await UserModel.findById(result._id).select("-password")
     res.send({
       success: true,
       message: "User created successfully",
-      data: result,
+      data: userById,
     });
   } else {
     res.send({

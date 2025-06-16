@@ -106,15 +106,16 @@ async function loginAdmin(req, res) {
 async function updateAdminProfile(req, res) {
   try {
     const { id, ...userData } = req.body;
+
     const files = req.files;
-    if (req.body.location) {
+    if (req.body.latitude && req.body.longitude  ) {
       userData.location = {
         type: "Point",
         coordinates: [
           parseFloat(req.body.longitude),
           parseFloat(req.body.latitude),
         ],
-        locationName: req.body.locationName,
+        locationName:req.body.locationName,
       };
     }
     if (req.body.workingDays) {
@@ -187,24 +188,24 @@ async function getSalonByServiceNameOrLocation(req, res) {
       ];
     }
 
-    if (latitude && longitude) {
-      filter.location = {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [parseFloat(longitude), parseFloat(latitude)],
-          },
-          $maxDistance: 10000, // 10 km
+  if (longitude && latitude) {
+    filter.location = {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [parseFloat(longitude), parseFloat(latitude)],
         },
-      };
-    }
-
+        $maxDistance: 10000,
+      },
+    };
+  }
+  console.log("first",filter.location)
     const result = await adminProfileModel
       .find(filter)
       .select("-password")
       .sort({ avgRating: -1 }).populate("categoryId");
 
-    if (!result || result.length === 0) {
+    if (result.length === 0) {
       return res.status(200).json({
         message: "Salon not found",
         success: false,

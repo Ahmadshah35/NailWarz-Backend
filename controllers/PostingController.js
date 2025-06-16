@@ -245,11 +245,8 @@ async function getPostById(req, res) {
 
     const post = await PostModal.findById(post_id)
       .populate("Like", "-password")
-      .populate("Like.salonId", "-password")
       .populate("Comment.userId", "-password")
-      .populate("Comment.salonId", "-password")
       .populate("Share.userId", "-password")
-      .populate("Share.salonId", "-password");
     if (!post) {
       return res.status(200).json({
         success: false,
