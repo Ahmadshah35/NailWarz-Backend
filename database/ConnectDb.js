@@ -1,12 +1,15 @@
-const mongoose = require('mongoose');
 
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-const ConnectDb = () => {
+const connectDb = async () => {
+  try {
+    await mongoose.connect(process.env.DATABASE_URL);
+    console.log("✅ DB Connected Successfully");
+  } catch (error) {
+    console.error("❌ DB Connection Failed");
+    console.error("Reason :", error.message);
+  }
+};
 
-    mongoose.connect('mongodb://127.0.0.1:27017/NailWarz')
-    .then(() => console.log('Connected!'))
-    .catch((error)=> console.log("error", error) )
-}
-
-
-module.exports = ConnectDb
+module.exports = connectDb;

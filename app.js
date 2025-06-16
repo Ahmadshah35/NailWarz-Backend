@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const path = require("path")
-const ConnectDb = require('./database/ConnectDb')
+const connectDb = require('./database/ConnectDb')
 const PORT = 3000
 const routes = require('./routes/Routes')
 require('dotenv').config()
@@ -31,7 +31,7 @@ app.get('/', (req, res)=>{
 
 const start = () => {
   try {
-    ConnectDb();
+    connectDb();
     app.listen(PORT, () => {
         console.log(`Server is Running on PORT: ${PORT}`);
     })
