@@ -45,9 +45,10 @@ routes.get("/getPollPosts", VotingController.getPollPosts);
 routes.post("/signUpAdmin", adminController.signUpAdmin);
 routes.post("/loginAdmin", adminController.loginAdmin);
 routes.post("/updateAdminProfile",uploads.adminUpload.fields([{ name: "image", maxCount: 4 }]), adminController.updateAdminProfile);
-routes.post("/getSalonByServiceNameOrLocation",adminController.getSalonByServiceNameOrLocation);
+routes.get("/getSalonByServiceNameOrLocation",adminController.getSalons);
 routes.post("/updateSalonIsActive", adminController.updateSalonIsActive);
 routes.post("/addOrRemoveCategoryId", adminController.addOrRemoveCategoryId);
+routes.get("/getSalons",adminController.getSalons);
 routes.get("/getAdminById", adminController.getAdminById);
 
 // Technician

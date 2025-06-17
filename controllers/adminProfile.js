@@ -171,12 +171,15 @@ async function updateAdminProfile(req, res) {
   }
 }
 
-async function getSalonByServiceNameOrLocation(req, res) {
+async function getSalons(req, res) {
   try {
-    const { latitude, longitude, categoryId, locationName } = req.body || {};
+    const { latitude, longitude, categoryId, locationName ,salonName } = req.query || {};
 
     const filter = {};
 
+    if (salonName) {
+  filter.salonName = { $regex: salonName, $options: "i" };
+}
     if (categoryId) {
       filter.categoryId = categoryId;
     }
@@ -341,7 +344,7 @@ module.exports = {
   signUpAdmin,
   loginAdmin,
   updateAdminProfile,
-  getSalonByServiceNameOrLocation,
+  getSalons,
   getAdminById,
   updateSalonIsActive,
   addOrRemoveCategoryId

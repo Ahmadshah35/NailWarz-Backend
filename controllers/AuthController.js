@@ -125,12 +125,13 @@ async function SignupWithEmailOrPhoneandPassword(req, res) {
 async function VerifyOtpAndCreate(req, res) {
   const { token, otp } = req.body;
 
-  const getData = JWT.verify(token, process.env.secretKey);
+  const getData = JWT.verify(token, process.env.secretKey); 
 
   const VerifyOtpNow = await OtpModel.findOne({ EmailOrPhone: getData.email });
   // console.log("first:",VerifyOtpNow)
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(getData.password, salt);
+
 
   if (VerifyOtpNow.Otp == otp) {
     // console.log("first:",VerifyOtpNow)
@@ -214,7 +215,7 @@ async function updateUserById(req, res) {
     if (!updatedUser) {
       return res.status(200).json({ success: false, message: "User not found" });
     }
-
+     
     return res.status(200).json({
       success: true,
       message: "User updated successfully",
