@@ -61,19 +61,19 @@ async function getPollPosts(req, res) {
   try {
     const posts = await PostModel.find({ Post_Type: "Poll" }).populate("userId", "-password");
 
-    if (!posts || posts.length === 0) {
+    if (posts.length === 0) {
       return res.status(200).json({ success: false, message: "Poll post not found" });  
     }
 
     const votes = posts.map(({ userId, Voting }) => {
       const yesVoteCount = Voting.filter((vote) => vote.vote === "Yes").length;
-            const NoVoteCount = Voting.filter((vote) => vote.vote === "No").length;
+      const NoVoteCount = Voting.filter((vote) => vote.vote === "No").length;
       return { userId, yesVoteCount ,NoVoteCount };
     });
 
     // console.log("Votes:", votes); 
 
-    res.status(200).json({ success: true, message: "Poll posts", data: votes });
+   return res.status(200).json({ success: true, message: "Poll posts", data: votes });
   } catch (error) {
     console.error("Voting error:", error);
     res.status(400).json({ success: false, message: "Server error", error: error.message });

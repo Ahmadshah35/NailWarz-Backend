@@ -218,7 +218,11 @@ async function SharePost(req, res) {
 
 async function getAllPost(req, res) {
   try {
-    const post = await PostModal.find().sort({ createdAt: -1 }).populate({path: "userId" ,select:"-password"}).populate({path: "salonId" ,select:"-password"});
+    const post = await PostModal.find()
+      .sort({ createdAt: -1 })
+      .populate({ path: "userId", select: "-password" })
+      .populate({ path: "salonId", select: "-password" })
+      .populate("Share.userId", "-password");
     return res
       .status(200)
       .json({ message: "post found", success: true, data: post });
@@ -247,7 +251,7 @@ async function getPostById(req, res) {
       .populate("Like", "-password")
       .populate("Comment.userId", "-password")
       .populate("Share.userId", "-password")
-      .populate("Voting.voter_id", "image username")
+      .populate("Voting.voter_id", "image username");
     if (!post) {
       return res.status(200).json({
         success: false,
