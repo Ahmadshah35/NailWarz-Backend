@@ -67,7 +67,8 @@ async function getPollPosts(req, res) {
 
     const votes = posts.map(({ userId, Voting }) => {
       const yesVoteCount = Voting.filter((vote) => vote.vote === "Yes").length;
-      return { userId, yesVoteCount };
+            const NoVoteCount = Voting.filter((vote) => vote.vote === "No").length;
+      return { userId, yesVoteCount ,NoVoteCount };
     });
 
     // console.log("Votes:", votes); 

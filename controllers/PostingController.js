@@ -247,6 +247,7 @@ async function getPostById(req, res) {
       .populate("Like", "-password")
       .populate("Comment.userId", "-password")
       .populate("Share.userId", "-password")
+      .populate("Voting.voter_id", "image username")
     if (!post) {
       return res.status(200).json({
         success: false,
