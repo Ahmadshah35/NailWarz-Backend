@@ -218,7 +218,7 @@ async function SharePost(req, res) {
 
 async function getAllPost(req, res) {
   try {
-    const post = await PostModal.find().sort({ createdAt: -1 });
+    const post = await PostModal.find().sort({ createdAt: -1 }).populate({path: "userId" ,select:"-password"}).populate({path: "salonId" ,select:"-password"});
     return res
       .status(200)
       .json({ message: "post found", success: true, data: post });

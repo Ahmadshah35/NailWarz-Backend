@@ -42,7 +42,7 @@ async function VotePost(req, res) {
         );
         message = "Successfully voted";
       }
-
+   
       return res.status(200).json({ success: true, message, data: updatedPost });
     } else {
       return res
@@ -62,7 +62,7 @@ async function getPollPosts(req, res) {
     const posts = await PostModel.find({ Post_Type: "Poll" }).populate("userId", "-password");
 
     if (!posts || posts.length === 0) {
-      return res.status(200).json({ success: false, message: "Poll post not found" });
+      return res.status(200).json({ success: false, message: "Poll post not found" });  
     }
 
     const votes = posts.map(({ userId, Voting }) => {
