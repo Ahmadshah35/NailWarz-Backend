@@ -52,13 +52,14 @@ const adminProfileSchema = new mongoose.Schema(
     },
     totalReviews: {
       type: Number,
+      default: 0,
     },
     categoryId: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "category",
       },
-    ],
+    ], 
     workingDays: [
       {
         day: {
@@ -77,7 +78,7 @@ const adminProfileSchema = new mongoose.Schema(
           type: String,
         },
         endTime: {
-          type: String,
+              type: String,
         },
         isActive: {
           type: Boolean,
