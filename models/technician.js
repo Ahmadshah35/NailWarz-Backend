@@ -18,6 +18,9 @@ const technicianSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    designation: {
+      type: String,
+    },
     workingDays: [
       {
         day: {
