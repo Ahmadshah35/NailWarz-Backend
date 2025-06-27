@@ -10,16 +10,16 @@ async function addFavouriteSalon(req, res) {
         .status(200)
         .json({ message: "User not found", success: false });
     } else {
-      const alreadyAdded = user.favourite.some(
-        (favourite) =>
-          favourite.salonId &&
-          favourite.salonId.toString() === salonId.toString()
-      );
+      // const alreadyAdded = user.favourite.some(
+      //   (favourite) =>
+      //     favourite.salonId &&
+      //     favourite.salonId.toString() === salonId.toString()
+      // );
 
-      if (alreadyAdded) {
+      if (user.favourite.includes(salonId)) {
         const updatedUser = await UserModel.findByIdAndUpdate(
           userId,
-          { $pull: { favourite: { salonId } } },
+          { $pull: { favourite:  salonId  } },
           { new: true }
         ).select("-password");
 
@@ -31,7 +31,7 @@ async function addFavouriteSalon(req, res) {
       } else {
         const updatedUser = await UserModel.findByIdAndUpdate(
           userId,
-          { $addToSet: { favourite: { salonId } } },
+          { $push: { favourite:  salonId  } },
           { new: true }
         ).select("-password");
 

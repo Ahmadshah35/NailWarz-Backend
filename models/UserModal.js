@@ -15,15 +15,13 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
     },
-    image:{
-      type:String
+    image: {
+      type: String,
     },
     favourite: [
       {
-        salonId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "adminProfile",
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "adminProfile",
       },
     ],
   },
