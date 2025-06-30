@@ -28,6 +28,7 @@ routes.get("/getNotificationsBySalonId", notificationController.getNotifications
 //Favourites
 routes.post("/addFavouriteSalon", favouriteController.addFavouriteSalon);
 routes.get("/getUserById", favouriteController.getUserById);
+routes.get("/getAllFavSalonByUserId", favouriteController.getAllFavSalonByUserId);
 
 //Post and voting routes
 routes.post("/CreatePost", uploads.postUpload.single("Post_Image"), PostingController.CreatePost);

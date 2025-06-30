@@ -56,10 +56,7 @@ async function getUserById(req, res) {
   try {
     const { userId } = req.query;
 
-    const user = await UserModel.findById(userId).select("-password").populate({
-      path: "favourite.salonId",
-      select: "-password",
-    });
+    const user = await UserModel.findById(userId).select("-password")
 
     if (!user) {
       return res.status(200).json({
@@ -83,7 +80,37 @@ async function getUserById(req, res) {
   }
 }
 
+async function getAllFavSalonByUserId(req, res) {
+  try {
+    const { userId } = req.query;
+
+    const user = await UserModel.findById(userId).select("-password")
+    .populate({path:"favourite", select:"-password -workingDays -categoryId"  })
+
+    if (!user) {
+      return res.status(200).json({
+        message: "User not found",
+        success: false,
+      });
+    } else {
+      return res.status(200).json({
+        message: "User found",
+        success: true,
+        data: user.favourite,
+      });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(400).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   addFavouriteSalon,
   getUserById,
+  getAllFavSalonByUserId
 };
