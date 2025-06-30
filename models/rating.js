@@ -16,7 +16,7 @@ const ratingSchema = new mongoose.Schema({
   message:{
     type:String
   }
-})
+},{timestamps:true})
 
 const ratingModel= mongoose.model("rating",ratingSchema)
 module.exports = ratingModel
