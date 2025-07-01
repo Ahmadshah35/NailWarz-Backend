@@ -77,9 +77,8 @@ async function getRatingBySalonOrStar(req, res) {
     const { salonId, stars } = req.query;
     const filter = {};
 
-    // Optional validation
     if (!salonId && !stars) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "Please provide salonId or stars to filter ratings.",
       });
@@ -90,29 +89,49 @@ async function getRatingBySalonOrStar(req, res) {
 
     const ratings = await ratingModel
       .find(filter)
-      // .populate("salonId", "-password")
       .populate("userId", "-password");
 
-    if (ratings.length == 0) {
-      res.status(200).json({
+    if (ratings.length === 0) {
+      return res.status(200).json({
         success: false,
-        message: "Rating not found",
-        total: ratings.length,
-        data: ratings,
-      });
-    } else {
-      res.status(200).json({
-        success: true,
-        message: "Ratings fetched successfully",
-        total: ratings.length,
-        data: ratings,
+        message: "No ratings found.",
+        total: 0,
+        data: [],
       });
     }
+
+    let ratingSummary = { averageRating: 0, totalReviews: 0 };
+
+    // Only calculate average rating if salonId is provided
+    if (salonId) {
+      const result = await ratingModel.aggregate([
+        {
+          $match: { salonId: new mongoose.Types.ObjectId(salonId) },
+        },
+        {
+          $group: {
+            _id: "$salonId",
+            averageRating: { $avg: "$stars" },
+            totalReviews: { $sum: 1 },
+          },
+        },
+      ]);
+
+      ratingSummary = result.length > 0 ? result[0] : ratingSummary;
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Ratings fetched successfully.",
+      averageRating: ratingSummary.averageRating,
+      totalReviews: ratingSummary.totalReviews,
+      data: ratings,
+    });
   } catch (error) {
     console.error("Error fetching ratings:", error);
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Server error while fetching ratings.",
       error: error.message,
     });
   }
