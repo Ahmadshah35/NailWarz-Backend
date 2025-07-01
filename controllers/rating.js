@@ -78,7 +78,7 @@ async function getRatingBySalonOrStar(req, res) {
     const filter = {};
 
     if (!salonId && !stars) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Please provide salonId or stars to filter ratings.",
       });
@@ -129,7 +129,7 @@ async function getRatingBySalonOrStar(req, res) {
     });
   } catch (error) {
     console.error("Error fetching ratings:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: "Server error while fetching ratings.",
       error: error.message,
