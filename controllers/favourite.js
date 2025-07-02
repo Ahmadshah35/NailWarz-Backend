@@ -19,7 +19,7 @@ async function addFavouriteSalon(req, res) {
       if (user.favourite.includes(salonId)) {
         const updatedUser = await UserModel.findByIdAndUpdate(
           userId,
-          { $pull: { favourite:  salonId  } },
+          { $pull: { favourite: salonId } },
           { new: true }
         ).select("-password");
 
@@ -31,7 +31,7 @@ async function addFavouriteSalon(req, res) {
       } else {
         const updatedUser = await UserModel.findByIdAndUpdate(
           userId,
-          { $push: { favourite:  salonId  } },
+          { $push: { favourite: salonId } },
           { new: true }
         ).select("-password");
 
@@ -56,7 +56,7 @@ async function getUserById(req, res) {
   try {
     const { userId } = req.query;
 
-    const user = await UserModel.findById(userId).select("-password")
+    const user = await UserModel.findById(userId).select("-password");
 
     if (!user) {
       return res.status(200).json({
@@ -84,17 +84,21 @@ async function getAllFavSalonByUserId(req, res) {
   try {
     const { userId } = req.query;
 
-    const user = await UserModel.findById(userId).select("-password")
-    .populate({path:"favourite", select:"-password -workingDays -categoryId"  })
+    const user = await UserModel.findById(userId)
+      .select("-password")
+      .populate({
+        path: "favourite",
+        select: "-password -workingDays -categoryId",
+      });
 
     if (!user) {
       return res.status(200).json({
-        message: "User not found",
+        message: "No favourite salons found.",
         success: false,
       });
     } else {
       return res.status(200).json({
-        message: "User found",
+        message: "Favourite salons retrieved successfully.",
         success: true,
         data: user.favourite,
       });
@@ -112,5 +116,5 @@ async function getAllFavSalonByUserId(req, res) {
 module.exports = {
   addFavouriteSalon,
   getUserById,
-  getAllFavSalonByUserId
+  getAllFavSalonByUserId,
 };
