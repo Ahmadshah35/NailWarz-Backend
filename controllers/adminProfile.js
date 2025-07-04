@@ -128,6 +128,7 @@ async function updateAdminProfile(req, res) {
         success: false,
       });
     }
+    if(files?.image?.length){
     const existingImages = existingProfile.image || [];
     const newImageNames = files?.image?.map((file) => file.filename) || [];
 
@@ -139,6 +140,9 @@ async function updateAdminProfile(req, res) {
     );
 
     userData.image = [...retainedImages, ...addedImages];
+  }else{
+    userData.image = existingProfile.image
+  }
     userData.isUpdated = true;
 
     if (userData.categoryId) {

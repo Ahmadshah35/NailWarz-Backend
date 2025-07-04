@@ -57,29 +57,33 @@ const updateService = async (req, res) => {
 
     const existingService = await serviceModel.findById(id);
     if (!existingService) {
-      return res
-        .status(200)
-        .json({ success: false, message: "Service not found" });
+      return res.status(200).json({
+        success: false,
+        message: "Service not found",
+      });
     }
 
     let technicianIds = [];
-
     if (updateData.technicianId) {
       technicianIds = JSON.parse(updateData.technicianId);
     }
 
-   const existingImages = existingService.images || [];
-    const newImageNames = files?.images?.map((file) => file.filename) || [];
+    if (req.files?.images?.length) {
+      const existingImages = existingService.images || [];
+      const newImageNames = req.files.images.map(file => file.filename);
 
-    const retainedImages = existingImages.filter((img) =>
-      newImageNames.includes(img)
-    );
-    const addedImages = newImageNames.filter(
-      (img) => !existingImages.includes(img)
-    );
+      const retainedImages = existingImages.filter(img =>
+        newImageNames.includes(img)
+      );
 
-    updateData.images = [...retainedImages, ...addedImages];
+      const addedImages = newImageNames.filter(
+        img => !existingImages.includes(img)
+      );
 
+      updateData.images = [...retainedImages, ...addedImages];
+    } else {
+      updateData.images = existingService.images;
+    }
 
     delete updateData.technicianId;
 
@@ -90,25 +94,18 @@ const updateService = async (req, res) => {
     );
 
     if (technicianIds.length > 0) {
-      for (const technicianId of technicianIds) {
-        const exists = updatedService.technicianId.includes(technicianId);
-        if (exists) {
-          updatedService = await serviceModel.findByIdAndUpdate(
-            id,
-            { $pull: { technicianId: technicianId } },
-            { new: true }
-          );
-        } else {
-          updatedService = await serviceModel.findByIdAndUpdate(
-            id,
-            { $addToSet: { technicianId: technicianId } },
-            { new: true }
-          );
-        }
-      }
+      updatedService = await serviceModel.findByIdAndUpdate(
+        id,
+        { $set: { technicianId: technicianIds } },
+        { new: true }
+      );
     }
 
-    return res.status(200).json({ success: true, data: updatedService });
+    return res.status(200).json({
+      success: true,
+      message: "Service updated successfully",
+      data: updatedService,
+    });
   } catch (error) {
     console.error("Update Service Error:", error);
     return res.status(400).json({
