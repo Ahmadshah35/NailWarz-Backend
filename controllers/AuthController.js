@@ -153,7 +153,7 @@ async function VerifyOtpAndCreate(req, res) {
     res.send({
 
      success: false,
-      message: "Your otp ",
+      message: "Invalid otp ",
     });
   }
 }
